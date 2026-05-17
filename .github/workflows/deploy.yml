@@ -13,9 +13,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to CapRover
-        uses: caprover/deploy-from-github@v1.1.2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          server: ${{ secrets.CAPROVER_SERVER }}
-          app: ${{ secrets.CAPROVER_APP }}
-          token: ${{ secrets.CAPROVER_APP_TOKEN }}
+          node-version: 20
+
+      - name: Install CapRover CLI
+        run: npm install -g caprover
+
+      - name: Deploy app to CapRover
+        run: |
+          caprover deploy \
+            --caproverUrl ${{ secrets.CAPROVER_SERVER }} \
+            --appName ${{ secrets.CAPROVER_APP }} \
+            --appToken ${{ secrets.CAPROVER_APP_TOKEN }}
